@@ -27,7 +27,7 @@ def load_user(user_id):
 
 
 @blueprint.route("/", methods=["GET", "POST"])
-@cache.cached(timeout=500, key_prefix=make_cache_key)
+# @cache.cached(timeout=500, key_prefix=make_cache_key)
 def home():
     """Home page."""
     form = LoginForm(request.form)
