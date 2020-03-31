@@ -13,6 +13,10 @@ flask-login = "*"
 flask-cors = "*"
 environs = "*"
 flask-static-digest = "*"
+flask-bcrypt = "*"
+flask-caching = "*"
+flask-migrate = "*"
+flask-wtf = "*"
 
 [requires]
 python_version = "3.8"
