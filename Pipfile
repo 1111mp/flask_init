@@ -6,13 +6,6 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-flask = "*"
-flask-sqlalchemy = "*"
-flask-mysqldb = "*"
-flask-login = "*"
-flask-cors = "*"
-environs = "*"
-flask-static-digest = "*"
 
 [requires]
 python_version = "3.8"

@@ -3,9 +3,11 @@
 ## run project
 ```
 cd flask_init
-pipenv install
+pipenv install -r requirements.txt
 flask run
 ```
+
+通过 ```pipenv lock -r > requirements.txt``` 生成与 pip 相同格式的依赖管理文件。
 
 ## Database Initialization
 ```
