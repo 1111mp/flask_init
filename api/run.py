@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 """Create an application instance."""
 
-from api.app.app import create_app
+from app.app import create_app
 app = create_app()

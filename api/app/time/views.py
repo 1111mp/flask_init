@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint, jsonify
-from api.app.extensions import cache
-from api.app.utils import make_cache_key
-from api.app.common import InvalidUsage
+from app.extensions import cache
+from app.utils import make_cache_key
+from app.common import InvalidUsage
 import time
 
 blueprint = Blueprint("time", __name__, url_prefix="/time",
@@ -19,6 +19,6 @@ def handle_invalid_usage(error):
 @blueprint.route("/")
 @cache.memoize(timeout=5)
 def index():
-    if True:
-        raise InvalidUsage('This view is gone', status_code=410)
+    # if True:
+    #     raise InvalidUsage('This view is gone', status_code=410)
     return {'time': time.time()}

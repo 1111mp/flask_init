@@ -17,4 +17,5 @@ pipenv lock -r > requirements.txt
 flask db init
 flask db migrate
 flask db upgrade
+error: Can't locate revision identified by '91eb2489ed74' 参考：https://blog.csdn.net/Super_Tiger_Lee/article/details/77772752
 ```

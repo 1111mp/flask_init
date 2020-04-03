@@ -6,6 +6,9 @@
 .pnp.js
 venv
 yarn.lock
+__pycache__
+migrations
+**/.idea/**
 
 # testing
 /coverage

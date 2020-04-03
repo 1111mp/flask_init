@@ -2,7 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="88c260ff-f0c7-4624-9cb9-6b56f58bd255" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/api/Pipfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/Pipfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/api/Pipfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/api/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/common.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/time/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/time/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/api/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,13 +49,13 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../app" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs.jest.jest_package" value="" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager">
@@ -104,6 +113,8 @@
       <workItem from="1585104732367" duration="1281000" />
       <workItem from="1585106026269" duration="1831000" />
       <workItem from="1585123347158" duration="2250000" />
+      <workItem from="1585810830157" duration="170000" />
+      <workItem from="1585813661204" duration="2468000" />
     </task>
     <servers />
   </component>
@@ -131,9 +142,9 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="635" y="124" width="647" height="801" key="find.popup/0.0.1920.1050/1920.0.1920.1050@0.0.1920.1050" timestamp="1578016564040" />
-    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1585105563438">
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1585810879925">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050/1920.0.1920.1050@0.0.1920.1050" timestamp="1585105563438" />
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050/1920.0.1920.1050@0.0.1920.1050" timestamp="1585810879925" />
   </component>
 </project>

@@ -2,10 +2,11 @@
 import logging
 import sys
 
-from flask import Flask, render_template
+from flask import Flask, request, jsonify
 
-from api.app import time
-from api.app.extensions import db, login_manager, cors, cache, migrate, flask_static_digest, csrf_protect
+from app import time, user, login
+from app.user.models import User
+from app.extensions import db, login_manager, cors, cache, migrate, flask_static_digest, csrf_protect
 
 
 def create_app(config_object="config"):
@@ -13,6 +14,7 @@ def create_app(config_object="config"):
     app.config.from_object(config_object)
     register_extensions(app)
     register_blueprints(app)
+    load_user(app)
     register_errorhandlers(app)
     configure_logger(app)
     return app
@@ -32,8 +34,25 @@ def register_extensions(app):
 
 def register_blueprints(app):
     """注册蓝图"""
+    app.register_blueprint(user.views.blueprint)
+    app.register_blueprint(login.views.blueprint)
     app.register_blueprint(time.views.blueprint)
     return None
+
+
+def load_user(app):
+    @login_manager.request_loader
+    def load_user_from_request(request):
+        api_key = request.headers.get('Token')
+        if(api_key):
+            user = User.verify_auth_token(api_key)
+            if user:
+                return user
+        return None
+
+    @login_manager.unauthorized_handler
+    def unauthorized_handler():
+        return jsonify({'code': 401, 'msg': 'Unauthorized'})
 
 
 def register_errorhandlers(app):
