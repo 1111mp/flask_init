@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint, request, jsonify, Response
 import json
-from flask_login import login_required, logout_user, utils
+from flask_login import login_required, logout_user
 from app.extensions import cache, csrf_protect
 from app.common import InvalidUsage, successReturn, ComplexEncoder
 from app.user.models import User
@@ -34,7 +34,8 @@ def getUser():
 @login_required
 def logout():
     """退出登录"""
-    user = utils._get_user()
-    print(user)
+    key = request.headers.get('Token')
+    print(key)
     logout_user()
+    cache.delete(key)
     return jsonify(successReturn({}, 'You are logged out.'))

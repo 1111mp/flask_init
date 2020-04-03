@@ -11,6 +11,7 @@ from app.extensions import db, login_manager, cors, cache, migrate, flask_static
 
 def create_app(config_object="config"):
     app = Flask(__name__)
+    print(config_object)
     app.config.from_object(config_object)
     register_extensions(app)
     register_blueprints(app)
@@ -41,13 +42,24 @@ def register_blueprints(app):
 
 
 def load_user(app):
+    @app.after_request
+    def call_after_request_callbacks(response):
+        """每次请求之后延长token的缓存时长"""
+        if request.path != '/user/logout' and request.path != '/login':
+            key = str(request.headers.get('Token'))
+            token = cache.get(key)
+            cache.set(key, token, timeout=60 * 60)
+        return response
+
     @login_manager.request_loader
     def load_user_from_request(request):
         api_key = request.headers.get('Token')
         if(api_key):
-            user = User.verify_auth_token(api_key)
-            if user:
-                return user
+            token = cache.get(api_key)
+            if (token):
+                user = User.verify_auth_token(token)
+                if user:
+                    return user
         return None
 
     @login_manager.unauthorized_handler

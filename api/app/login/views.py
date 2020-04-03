@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, request, jsonify
+import uuid
 from app.user.models import User
 from app.common import InvalidUsage, successReturn
-from app.extensions import csrf_protect
+from app.extensions import csrf_protect, cache
 
 blueprint = Blueprint('logon', __name__, url_prefix='/login')
 
@@ -14,7 +15,7 @@ def handle_invalid_usage(error):
     return response
 
 
-@blueprint.route('/', methods=['POST'])
+@blueprint.route('', methods=['POST'])
 @csrf_protect.exempt
 def login():
     data = request.get_json(force=True)
@@ -27,4 +28,6 @@ def login():
         raise jsonify(InvalidUsage('Invalid password', status_code=400))
 
     token = user.generate_token()
-    return jsonify(successReturn({'token': token}, '登录成功！'))
+    key = str(uuid.uuid4())
+    cache.set(key, token, timeout=60 * 60)
+    return jsonify(successReturn({'token': key}, '登录成功！'))

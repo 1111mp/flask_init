@@ -4,7 +4,7 @@ import datetime as dt
 from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import (
-    TimedJSONWebSignatureSerializer as Serializer,
+    JSONWebSignatureSerializer as Serializer,
     BadSignature,
     SignatureExpired
 )
@@ -80,6 +80,6 @@ class User(UserMixin, SurrogatePK, Model, EntityBase):
         user = cls.query.get(data["id"])
         return user
 
-    def generate_token(self, expiration=24 * 60 * 60):
-        s = Serializer(current_app.config["SECRET_KEY"], expires_in=expiration)
+    def generate_token(self):
+        s = Serializer(current_app.config["SECRET_KEY"])
         return s.dumps({"id": self.id}).decode()

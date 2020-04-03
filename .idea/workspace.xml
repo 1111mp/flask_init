@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="88c260ff-f0c7-4624-9cb9-6b56f58bd255" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/api/Pipfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Pipfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/api/Pipfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/api/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/common.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/common.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/time/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/time/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/api/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +105,7 @@
       <workItem from="1585106026269" duration="1831000" />
       <workItem from="1585123347158" duration="2250000" />
       <workItem from="1585810830157" duration="170000" />
-      <workItem from="1585813661204" duration="2468000" />
+      <workItem from="1585813661204" duration="3067000" />
     </task>
     <servers />
   </component>

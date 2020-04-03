@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"],
+			"config/*": ["src/config/*"],
+			"pages/*": ["src/pages/*"],
+			"react-dom/*": ["@hot-loader/react-dom/*"]
+		}
+	}
+}
