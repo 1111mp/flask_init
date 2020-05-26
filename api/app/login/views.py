@@ -28,6 +28,6 @@ def login():
         raise jsonify(InvalidUsage('Invalid password', status_code=400))
 
     token = user.generate_token()
-    key = str(uuid.uuid4())
+    key = str(uuid.uuid5())
     cache.set(key, token, timeout=60 * 60)
     return jsonify(successReturn({'token': key}, '登录成功！'))

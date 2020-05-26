@@ -11,7 +11,7 @@ interface Config {
 
 const config: Config = {
 	isDev: NODE_ENV === 'development',
-	/** 默认不使用history模式 */
+	/** 默认使用history模式 */
 	isBorwserHistory: true,
 }
 

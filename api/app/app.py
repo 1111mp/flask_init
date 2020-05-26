@@ -45,7 +45,7 @@ def load_user(app):
     @app.after_request
     def call_after_request_callbacks(response):
         """每次请求之后延长token的缓存时长"""
-        if request.path != '/user/logout' and request.path != '/login':
+        if request.path != '/user/logout' and request.path != '/login' and request.path != '/user/register':
             key = str(request.headers.get('Token'))
             token = cache.get(key)
             cache.set(key, token, timeout=60 * 60)
