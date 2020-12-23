@@ -1,4 +1,4 @@
-# An initialization project of flash
+# An initialization project of flask
 
 ## run project
 ```
