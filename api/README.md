@@ -1,9 +1,12 @@
 # An initialization project of flash
 
 ## run project
+
+pipenv 使用教程：[pipenv](https://crazygit.wiseturtles.com/2018/01/08/pipenv-tour)
+
 ```
 cd api
-pipenv install -r requirements.txt
+pipenv install
 flask run
 ```
 通过 

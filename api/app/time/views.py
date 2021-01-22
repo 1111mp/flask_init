@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint, jsonify
+# from flask_login import login_required
 from app.extensions import cache
-from app.utils import make_cache_key
 from app.common import InvalidUsage
 import time
 
@@ -18,6 +18,7 @@ def handle_invalid_usage(error):
 # https://www.abbeyok.com/archives/396
 @blueprint.route("/")
 @cache.memoize(timeout=5)
+# @login_required
 def index():
     # if True:
     #     raise InvalidUsage('This view is gone', status_code=410)
