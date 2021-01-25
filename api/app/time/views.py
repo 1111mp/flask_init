@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint, jsonify
+from api.app.common import InvalidUsage
 # from flask_login import login_required
-from app.extensions import cache
-from app.common import InvalidUsage
+from api.app.extensions import cache
 import time
 
 blueprint = Blueprint("time", __name__, url_prefix="/time",

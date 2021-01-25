@@ -1,11 +1,12 @@
 # -*- coding:utf-8 -*-
-from flask import Blueprint, request, jsonify, Response
 import json
+from flask import Blueprint, request, jsonify
 from flask_login import login_required, logout_user
-from app.extensions import cache, csrf_protect
-from app.common import InvalidUsage, successReturn, ComplexEncoder
-from app.user.models import User
-from app.database import db
+from sqlalchemy.exc import IntegrityError
+
+from api.app.extensions import cache, csrf_protect
+from api.app.common import InvalidUsage, cacheToken, successReturn
+from api.app.user.models import User
 
 blueprint = Blueprint("user", __name__, url_prefix="/user")
 
@@ -21,13 +22,21 @@ def handle_invalid_usage(error):
 @blueprint.route("/register", methods=["POSt"])
 def register():
     """用户注册"""
-    data = request.get_json(force=True)
-    print(data)
-    user = User.create(
-        username=data['username'], email=data['email'], password=data['password'])
-    # db.session.add(user)
-    # db.session.commit()
-    return jsonify(successReturn({}, 'register successed.'))
+    params = request.get_json(force=True)
+    data = None
+    try:
+        user = User.create(
+            account=params['account'], email=params['email'], password=params['password'])
+        if user.id:
+            data = user.to_json()
+            token = user.generate_token()
+            key = cacheToken(user.id, token)
+            data['token'] = key
+    except IntegrityError:
+        raise InvalidUsage(
+            'account or email has been registered', status_code=400)
+
+    return jsonify(successReturn(data, 'register successed.'))
 
 
 @blueprint.route("/members", methods=["POST"])
@@ -40,7 +49,7 @@ def getUser():
     users_output = []
     for user in users:
         users_output.append(user.to_json())
-    return Response(json.dumps(successReturn({'items': users_output}, ''), cls=ComplexEncoder), mimetype='application/json')
+    return jsonify(successReturn(users_output))
 
 
 @blueprint.route("/logout", methods=["GET", "POST"])

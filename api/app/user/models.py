@@ -8,7 +8,7 @@ from itsdangerous import (
     BadSignature,
     SignatureExpired
 )
-from app.database import (
+from api.app.database import (
     Column,
     Model,
     SurrogatePK,
@@ -16,7 +16,7 @@ from app.database import (
     reference_col,
     relationship,
 )
-from app.extensions import bcrypt
+from api.app.extensions import bcrypt
 
 
 class EntityBase(object):
@@ -34,7 +34,7 @@ class User(UserMixin, SurrogatePK, Model, EntityBase):
     """A user of the app."""
 
     __tablename__ = "users"
-    username = Column(db.String(80), unique=True, nullable=False)
+    account = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
     #: The hashed password
     password = Column(db.LargeBinary(128), nullable=True)
@@ -45,9 +45,9 @@ class User(UserMixin, SurrogatePK, Model, EntityBase):
     active = Column(db.Boolean(), default=False)
     is_admin = Column(db.Boolean(), default=False)
 
-    def __init__(self, username, email, password=None, **kwargs):
+    def __init__(self, account, email, password=None, **kwargs):
         """Create instance."""
-        db.Model.__init__(self, username=username, email=email, **kwargs)
+        db.Model.__init__(self, account=account, email=email, **kwargs)
         if password:
             self.set_password(password)
         else:
@@ -68,7 +68,7 @@ class User(UserMixin, SurrogatePK, Model, EntityBase):
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return f"<User({self.username!r})>"
+        return f"<User({self.account!r})>"
 
     @classmethod
     def verify_auth_token(cls, token):

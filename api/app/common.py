@@ -1,6 +1,13 @@
 # -*- coding:utf-8 -*-
 from datetime import date, datetime
 import json
+import uuid
+
+from redis import WatchError
+from .extensions import xtredis
+from api.config import USERAUTHKEY
+
+# https://dormousehole.readthedocs.io/en/latest/patterns/apierrors.html
 
 
 class InvalidUsage(Exception):
@@ -22,6 +29,7 @@ class InvalidUsage(Exception):
 
 class ComplexEncoder(json.JSONEncoder):
     """jsonu序列化时对datetime和date做特殊处理"""
+
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
@@ -31,9 +39,35 @@ class ComplexEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
-def successReturn(data, msg):
+def successReturn(data, msg=''):
     return {
         'code': 200,
         'data': data,
         'msg': msg
     }
+
+
+def cacheToken(userId, token, maxAge=60 * 60 * 1000):
+    key = str(uuid.uuid4())
+    auth = USERAUTHKEY + str(userId)
+    with xtredis.pipeline() as pipe:
+        while True:
+            try:
+                pipe.watch(auth)
+                pipe.multi()
+                pipe.delete(auth).hset(auth, key, token).expire(auth, maxAge)
+                pipe.execute()
+                break
+            except WatchError:
+                continue
+    return key
+
+
+def getToken(userId, key):
+    auth = USERAUTHKEY + str(userId)
+    return xtredis.hget(auth, key)
+
+
+def extendToken(userId, maxAge=60 * 60 * 1000):
+    auth = USERAUTHKEY + str(userId)
+    xtredis.expire(auth, maxAge)

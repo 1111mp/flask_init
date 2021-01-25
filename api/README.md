@@ -16,7 +16,11 @@ pipenv lock -r > requirements.txt
 生成与 pip 相同格式的依赖管理文件。
 
 ## Database Initialization
+
+windows cmd下启动项目报错`Error: Could not locate a Flask application`的[解决方案](https://github.com/Microsoft/vscode-docs/issues/1881)
+
 ```
+set FLASK_APP=api/run.py
 flask db init
 flask db migrate
 flask db upgrade

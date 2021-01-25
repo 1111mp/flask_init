@@ -6,6 +6,8 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_static_digest import FlaskStaticDigest
 from flask_wtf.csrf import CSRFProtect
+from redis import Redis
+from api.config import CACHE_REDIS_URL
 
 login_manager = LoginManager()
 # login_manager.login_view = 'login'
@@ -21,3 +23,4 @@ cors = CORS()
 # https://www.abbeyok.com/archives/396
 cache = Cache()
 flask_static_digest = FlaskStaticDigest()
+xtredis = Redis(host='localhost', port=6379, db=2)

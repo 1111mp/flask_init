@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 import uuid
-from app.user.models import User
-from app.common import InvalidUsage, successReturn
-from app.extensions import csrf_protect, cache
+from api.app.user.models import User
+from api.app.common import InvalidUsage, cacheToken, successReturn
+from api.app.extensions import csrf_protect, cache
 
 blueprint = Blueprint('logon', __name__, url_prefix='/login')
 
@@ -15,19 +15,30 @@ def handle_invalid_usage(error):
     return response
 
 
-@blueprint.route('', methods=['POST'])
+@blueprint.route('', methods=['GET', 'POST'])
 @csrf_protect.exempt
 def login():
-    data = request.get_json(force=True)
-    user = User.query.filter_by(username=data['username']).first()
+    params = None
+    user = None
+    if request.method == 'GET':
+        params = request.args
+        user = User.query.filter_by(account=params.get('account')).first()
+    if request.method == 'POST':
+        params = request.get_json(force=True)
+        user = User.query.filter_by(account=params['account']).first()
 
     if not user:
-        raise jsonify(InvalidUsage('Unknown username', status_code=400))
+        raise InvalidUsage('Unknown account', status_code=401)
 
-    if not user.check_password(data['password']):
-        raise jsonify(InvalidUsage('Invalid password', status_code=400))
+    if not user.check_password(params['password'] or params.get('account')):
+        raise InvalidUsage('Invalid password', status_code=401)
 
     token = user.generate_token()
-    key = str(uuid.uuid5())
-    cache.set(key, token, timeout=60 * 60)
-    return jsonify(successReturn({'token': key}, '登录成功！'))
+    key = cacheToken(user.id, token)
+    data = user.to_json()
+    data['token'] = key
+
+    # https://stackoverflow.com/questions/57663557/flask-how-to-change-status-code-using-jsonify-to-return-response
+    # Flask: How to change status code using jsonify to return Response?
+    # return make_response(jsonify(successReturn({'token': 111}, '登录成功！')), 403)
+    return jsonify(successReturn(data, '登录成功！'))
