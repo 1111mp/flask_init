@@ -1,12 +1,11 @@
 # -*- coding:utf-8 -*-
-import json
 from flask import Blueprint, request, jsonify
-from flask_login import login_required, logout_user
+from flask_login import current_user, login_required, logout_user
 from sqlalchemy.exc import IntegrityError
 
-from api.app.extensions import cache, csrf_protect
-from api.app.common import InvalidUsage, cacheToken, successReturn
-from api.app.user.models import User
+from api.app.extensions import cache
+from api.app.common import InvalidUsage, cacheToken, delToken, successReturn
+from api.app.user.models import User, UserSchema
 
 blueprint = Blueprint("user", __name__, url_prefix="/user")
 
@@ -18,7 +17,6 @@ def handle_invalid_usage(error):
     return response
 
 
-@csrf_protect.exempt
 @blueprint.route("/register", methods=["POSt"])
 def register():
     """用户注册"""
@@ -28,7 +26,9 @@ def register():
         user = User.create(
             account=params['account'], email=params['email'], password=params['password'])
         if user.id:
-            data = user.to_json()
+            schema = UserSchema(exclude=['password'])
+            data = schema.dump(user)
+
             token = user.generate_token()
             key = cacheToken(user.id, token)
             data['token'] = key
@@ -40,25 +40,21 @@ def register():
 
 
 @blueprint.route("/members", methods=["POST"])
-@csrf_protect.exempt
 @login_required
-@cache.memoize(timeout=5)
+@cache.memoize(timeout=60)
 def getUser():
     """获取用户列表"""
     users = User.query.all()
-    users_output = []
-    for user in users:
-        users_output.append(user.to_json())
-    return jsonify(successReturn(users_output))
+    schema = UserSchema(many=True, exclude=['password'])
+    data = schema.dump(users)
+    return jsonify(successReturn(data))
 
 
 @blueprint.route("/logout", methods=["GET", "POST"])
-@csrf_protect.exempt
 @login_required
 def logout():
     """退出登录"""
     key = request.headers.get('Token')
-    print(key)
+    delToken(current_user.get_id(), key)
     logout_user()
-    cache.delete(key)
     return jsonify(successReturn({}, 'You are logged out.'))

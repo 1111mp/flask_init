@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
-from datetime import date, datetime
+from datetime import date, datetime, time
 import json
 import uuid
+from sqlalchemy.ext.declarative import DeclarativeMeta
 
 from redis import WatchError
 from .extensions import xtredis
@@ -35,6 +36,22 @@ class ComplexEncoder(json.JSONEncoder):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
         elif isinstance(obj, date):
             return obj.strftime('%Y-%m-%d')
+        elif isinstance(obj, time):
+            return obj.isoformat()
+        if isinstance(obj, bytes):
+            return str(obj, encoding='utf-8')
+        elif isinstance(obj.__class__, DeclarativeMeta):
+            return self.default({i.name: getattr(obj, i.name) for i in obj.__table__.columns})
+        elif isinstance(obj, dict):
+            for k in obj:
+                try:
+                    if isinstance(obj[k], (datetime, date, DeclarativeMeta)):
+                        obj[k] = self.default(obj[k])
+                    else:
+                        obj[k] = obj[k]
+                except TypeError:
+                    obj[k] = None
+            return obj
         else:
             return json.JSONEncoder.default(self, obj)
 
@@ -71,3 +88,7 @@ def getToken(userId, key):
 def extendToken(userId, maxAge=60 * 60 * 1000):
     auth = USERAUTHKEY + str(userId)
     xtredis.expire(auth, maxAge)
+
+def delToken(userId, key):
+    auth = USERAUTHKEY + str(userId)
+    xtredis.hdel(auth, key)

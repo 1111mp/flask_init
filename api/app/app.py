@@ -1,21 +1,28 @@
 # -*- coding: utf-8 -*-
 import logging
 import sys
-import re
 
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 
 from api.app import time, user, login
 from api.app.user.models import User
-from api.app.extensions import db, login_manager, cors, cache, migrate, flask_static_digest, csrf_protect
-from api.app.common import InvalidUsage, ComplexEncoder, getToken, extendToken
+from api.app.extensions import (
+    db,
+    login_manager,
+    cors,
+    cache,
+    migrate,
+    flask_static_digest,
+    # csrf_protect,
+    bcrypt
+)
+from api.app.common import InvalidUsage, getToken, extendToken
 
 
-def create_app(config_object="config"):
+def create_app(config_object="api.config"):
     app = Flask(__name__)
-    print(config_object)
     app.config.from_object(config_object)
-    app.json_encoder = ComplexEncoder
+    # app.json_encoder = ComplexEncoder
     register_extensions(app)
     register_blueprints(app)
     load_user(app)
@@ -26,9 +33,10 @@ def create_app(config_object="config"):
 
 def register_extensions(app):
     """给Flask注册扩展功能"""
+    bcrypt.init_app(app)
     cache.init_app(app)
     db.init_app(app)
-    csrf_protect.init_app(app)
+    # csrf_protect.init_app(app)
     login_manager.init_app(app)
     cors.init_app(app, resources=r'/*', supports_credentials=True)
     migrate.init_app(app, db)

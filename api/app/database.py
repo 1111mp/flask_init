@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-from .compat import basestring
-from .extensions import db
+from api.app.compat import basestring
+from api.app.extensions import db
 
 # Alias common SQLAlchemy names
 Column = db.Column

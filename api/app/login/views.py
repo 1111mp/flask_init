@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, request, jsonify, make_response
-import uuid
-from api.app.user.models import User
+from flask import Blueprint, request, jsonify
+from flask_login import login_user
+from api.app.user.models import User, UserSchema
 from api.app.common import InvalidUsage, cacheToken, successReturn
-from api.app.extensions import csrf_protect, cache
 
-blueprint = Blueprint('logon', __name__, url_prefix='/login')
+blueprint = Blueprint('login', __name__, url_prefix='/login')
 
 
 @blueprint.app_errorhandler(InvalidUsage)
@@ -16,7 +15,6 @@ def handle_invalid_usage(error):
 
 
 @blueprint.route('', methods=['GET', 'POST'])
-@csrf_protect.exempt
 def login():
     params = None
     user = None
@@ -30,12 +28,16 @@ def login():
     if not user:
         raise InvalidUsage('Unknown account', status_code=401)
 
-    if not user.check_password(params['password'] or params.get('account')):
+    if not user.check_password(params['password'] or params.get('password')):
         raise InvalidUsage('Invalid password', status_code=401)
+
+    login_user(user)
+    schema = UserSchema(exclude=['password'])
 
     token = user.generate_token()
     key = cacheToken(user.id, token)
-    data = user.to_json()
+
+    data = schema.dump(user)
     data['token'] = key
 
     # https://stackoverflow.com/questions/57663557/flask-how-to-change-status-code-using-jsonify-to-return-response

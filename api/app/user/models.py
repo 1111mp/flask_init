@@ -2,6 +2,7 @@
 """User models"""
 import datetime as dt
 from flask import current_app
+from marshmallow import Schema, fields
 from flask_login import UserMixin
 from itsdangerous import (
     JSONWebSignatureSerializer as Serializer,
@@ -17,6 +18,18 @@ from api.app.database import (
     relationship,
 )
 from api.app.extensions import bcrypt
+
+
+class UserSchema(Schema):
+    userId = fields.Int(attribute='id')
+    account = fields.Str()
+    password = fields.Str()
+    first_name = fields.Str()
+    last_name = fields.Str()
+    active = fields.Bool()
+    is_admin = fields.Bool()
+    email = fields.Email()
+    created_at = fields.DateTime()
 
 
 class EntityBase(object):
@@ -52,6 +65,10 @@ class User(UserMixin, SurrogatePK, Model, EntityBase):
             self.set_password(password)
         else:
             self.password = None
+
+    def get_id(self):
+        """获取用户ID"""
+        return self.id
 
     def set_password(self, password):
         """Set password."""
