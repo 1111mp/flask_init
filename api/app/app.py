@@ -8,6 +8,7 @@ from api.app import time, user, login
 from api.app.user.models import User
 from api.app.extensions import (
     db,
+    xtredis,
     login_manager,
     cors,
     cache,
@@ -36,6 +37,7 @@ def register_extensions(app):
     bcrypt.init_app(app)
     cache.init_app(app)
     db.init_app(app)
+    xtredis.init_app(app)
     # csrf_protect.init_app(app)
     login_manager.init_app(app)
     cors.init_app(app, resources=r'/*', supports_credentials=True)

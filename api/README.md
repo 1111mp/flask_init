@@ -26,3 +26,6 @@ flask db migrate
 flask db upgrade
 error: Can't locate revision identified by '91eb2489ed74' 参考：https://blog.csdn.net/Super_Tiger_Lee/article/details/77772752
 ```
+
+python中使用protocol buffer：[参考](https://www.jianshu.com/p/b723053a86a6)
+protoc: command not found (Linux Mac Windows)，解决方法：[stackoverflow](https://stackoverflow.com/questions/47704968/protoc-command-not-found-linux)
