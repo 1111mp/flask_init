@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_static_digest import FlaskStaticDigest
 # from flask_wtf.csrf import CSRFProtect
-from redis import Redis
+from flask_redis import FlaskRedis
 
 login_manager = LoginManager()
 # login_manager.login_view = 'login'
@@ -22,4 +22,6 @@ cors = CORS()
 # https://www.abbeyok.com/archives/396
 cache = Cache()
 flask_static_digest = FlaskStaticDigest()
-xtredis = Redis(host='localhost', port=6379, db=1)
+xtredis = FlaskRedis()
+# 不要使用localhost 使用127.0.0.1 因为默认会尝试走ipv6连接 造成连接时间特别长
+# https://github.com/andymccurdy/redis-py/issues/740

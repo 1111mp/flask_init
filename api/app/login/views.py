@@ -35,9 +35,7 @@ def login():
     schema = UserSchema(exclude=['password'])
 
     token = user.generate_token()
-    print(token)
     key = cacheToken(user.id, token)
-
     data = schema.dump(user)
     data['token'] = key
 
