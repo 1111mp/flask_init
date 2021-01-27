@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
 """User models"""
 import datetime as dt
+import jwt
 from flask import current_app
 from marshmallow import Schema, fields
 from flask_login import UserMixin
-from itsdangerous import (
-    JSONWebSignatureSerializer as Serializer,
-    BadSignature,
-    SignatureExpired
-)
 from api.app.database import (
     Column,
     Model,
     SurrogatePK,
-    db,
-    reference_col,
-    relationship,
+    db
 )
 from api.app.extensions import bcrypt
 
@@ -89,14 +83,9 @@ class User(UserMixin, SurrogatePK, Model, EntityBase):
 
     @classmethod
     def verify_auth_token(cls, token):
-        s = Serializer(current_app.config["SECRET_KEY"])
-        try:
-            data = s.loads(token)
-        except (BadSignature, SignatureExpired):
-            return None
-        user = cls.query.get(data["id"])
-        return user
+        data = jwt.decode(
+            token, current_app.config["SECRET_KEY"], algorithms=['HS256'])
+        return cls.query.get(data["id"])
 
     def generate_token(self):
-        s = Serializer(current_app.config["SECRET_KEY"])
-        return s.dumps({"id": self.id}).decode()
+        return jwt.encode({"id": self.id}, current_app.config["SECRET_KEY"], algorithm='HS256')
