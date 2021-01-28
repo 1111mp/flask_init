@@ -9,6 +9,7 @@ from api.app.user.models import User
 from api.app.extensions import (
     db,
     xtredis,
+    socketio,
     login_manager,
     cors,
     cache,
@@ -18,6 +19,7 @@ from api.app.extensions import (
     bcrypt
 )
 from api.app.common import InvalidUsage, getToken, extendToken
+from api.app.socketio import init_socketio
 
 
 def create_app(config_object="api.config"):
@@ -29,6 +31,7 @@ def create_app(config_object="api.config"):
     load_user(app)
     register_errorhandlers(app)
     configure_logger(app)
+    init_socketio()
     return app
 
 
@@ -43,6 +46,8 @@ def register_extensions(app):
     cors.init_app(app, resources=r'/*', supports_credentials=True)
     migrate.init_app(app, db)
     flask_static_digest.init_app(app)
+    socketio.init_app(app, cors_allowed_origins='*',
+                      logger=True, engineio_logger=True)
     return None
 
 

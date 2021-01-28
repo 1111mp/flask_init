@@ -3,11 +3,12 @@
 ## run project
 
 pipenv 使用教程：[pipenv](https://crazygit.wiseturtles.com/2018/01/08/pipenv-tour)
+安装 environs
 
 ```
 cd api
 pipenv install
-flask run
+F5
 ```
 通过 
 ```
