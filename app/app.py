@@ -2,39 +2,95 @@
 import logging
 import sys
 
-from flask import Flask, render_template
+from flask import Flask, jsonify
 
-from app import user, public
-from app.extensions import db, login_manager, cors, cache, migrate, flask_static_digest, csrf_protect
+from app import time, user, login
+from app.user.models import User
+from app.extensions import (
+    db,
+    xtredis,
+    socketio,
+    login_manager,
+    cors,
+    cache,
+    migrate,
+    flask_static_digest,
+    # csrf_protect,
+    bcrypt
+)
+from app.common import InvalidUsage, getToken, extendToken
+from app.socketio import init_socketio
 
 
 def create_app(config_object="config"):
     app = Flask(__name__)
     app.config.from_object(config_object)
+    # app.json_encoder = ComplexEncoder
     register_extensions(app)
     register_blueprints(app)
+    load_user(app)
     register_errorhandlers(app)
     configure_logger(app)
+    init_socketio()
     return app
 
 
 def register_extensions(app):
     """给Flask注册扩展功能"""
+    bcrypt.init_app(app)
     cache.init_app(app)
     db.init_app(app)
-    csrf_protect.init_app(app)
+    xtredis.init_app(app)
+    # csrf_protect.init_app(app)
     login_manager.init_app(app)
     cors.init_app(app, resources=r'/*', supports_credentials=True)
     migrate.init_app(app, db)
     flask_static_digest.init_app(app)
+    socketio.init_app(app, cors_allowed_origins='*',
+                      logger=True, engineio_logger=True)
     return None
 
 
 def register_blueprints(app):
     """注册蓝图"""
-    app.register_blueprint(public.views.blueprint)
     app.register_blueprint(user.views.blueprint)
+    app.register_blueprint(login.views.blueprint)
+    app.register_blueprint(time.views.blueprint)
     return None
+
+
+def load_user(app):
+    # @app.after_request
+    # def call_after_request_callbacks(response):
+    #     """每次请求之后延长token的缓存时长"""
+    #     if not re.search("/user/logout|/login|/user/register", request.path):
+    #         key = str(request.headers.get('Token'))
+    #         token = cache.get(key)
+    #         cache.set(key, token, timeout=60 * 60)
+    #     return response
+
+    @login_manager.request_loader
+    def load_user_from_request(request):
+        api_key = request.headers.get('Token')
+        userId = request.headers.get('UserId')
+        if (api_key):
+            token = getToken(userId, api_key)
+            if (token):
+                user = User.verify_auth_token(token)
+                if user:
+                    extendToken(user.id)
+                    return user
+        return None
+
+    @login_manager.unauthorized_handler
+    def unauthorized_handler():
+        return jsonify({'code': 401, 'msg': 'Unauthorized'})
+
+    @app.errorhandler(InvalidUsage)
+    def handle_invalid_usage(error):
+        response = jsonify(error.to_dict())
+        response.status_code = error.status_code
+        return response
 
 
 def register_errorhandlers(app):
@@ -43,7 +99,7 @@ def register_errorhandlers(app):
         """Render error template."""
         # If a HTTPException, pull the `code` attribute; default to 500
         error_code = getattr(error, "code", 500)
-        return render_template(f"{error_code}.html"), error_code
+        return {'code': error_code}
 
     for errcode in [401, 404, 500]:
         app.errorhandler(errcode)(render_error)

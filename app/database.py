@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
-from .compat import basestring
-from .extensions import db
+from app.compat import basestring
+from app.extensions import db
 
 # Alias common SQLAlchemy names
 Column = db.Column
@@ -78,4 +78,3 @@ def reference_col(
         nullable=nullable,
         **column_kwargs,
     )
-

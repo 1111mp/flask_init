@@ -1,11 +1,27 @@
 [[source]]
-name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-bcrypt = "*"
+flask-caching = "*"
+flask-cors = "*"
+flask-login = "*"
+flask-migrate = "*"
+flask-sqlalchemy = "*"
+flask-static-digest = "*"
+flask-redis = "*"
+flask-socketio = "*"
+environs = "*"
+protobuf = "*"
+pyjwt = "*"
+flask-mysqldb = "*"
+redis = "==2.10.6"
+eventlet = "*"
 
 [dev-packages]
 
-[packages]
-
 [requires]
-python_version = "3.8"
+python_version = "3.9"
