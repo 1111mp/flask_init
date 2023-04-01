@@ -18,7 +18,7 @@ environs = "*"
 protobuf = "*"
 pyjwt = "*"
 flask-mysqldb = "*"
-redis = "==4.5.3"
+redis = "==4.5.4"
 eventlet = "*"
 
 [dev-packages]
